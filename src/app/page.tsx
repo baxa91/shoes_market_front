@@ -4,7 +4,7 @@ import CommonDropdown from "@/app/components/dropdown";
 import {Prices} from "@/app/components/inputs";
 import DataList from "@/app/components/list";
 
-export default async function Home() {
+export default function Home() {
     const dictList = [
         {name: 'Мужские', 'id': 'rtr'},
         {name: 'Женские', 'id': 'dfr'},

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Link from "next/link";
+import { AuthProvider } from "@/context/AuthContext";
 import { MenuClick } from "./components/navbar";
+import { FlowbiteInit } from "./components/FlowbiteInit";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -19,12 +21,15 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
-    <body className={inter.className}>
-    <header>
-      <MenuClick></MenuClick>
-    </header>
-    <main>{children}</main>
-    <footer className="shadow bg-gray-800">
+    <body  className={`${inter.className} min-h-screen flex flex-col`}>
+    <AuthProvider>
+       <FlowbiteInit />
+        <header>
+            <MenuClick />
+        </header>
+
+        <main className="flex-1" >{children}</main>
+      <footer className="shadow bg-gray-800">
       <div className="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
       <span className="text-sm  sm:text-center text-gray-400">
         © 2024 <Link href="https://flowbite.com/" className="hover:underline">Family™</Link>. All Rights Reserved.
@@ -39,7 +44,7 @@ export default async function RootLayout({
         </ul>
       </div>
     </footer>
-
+    </AuthProvider>
     </body>
     </html>
   );

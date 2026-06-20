@@ -1,6 +1,5 @@
 "use client";
 import React from 'react';
-import 'flowbite';
 
 interface CommonDropdownProps {
   number: string;
@@ -27,7 +26,7 @@ const CommonDropdown: React.FC<CommonDropdownProps> = (
                     d="m1 1 4 4 4-4"/>
           </svg></button>
 
-          <div id={`dropdownSearch${number}`} className="hidden z-10 bg-white rounded-lg shadow w-60 dark:bg-gray-700">
+          <div id={`dropdownSearch${number}`}  suppressHydrationWarning className="hidden z-10 bg-white rounded-lg shadow w-60 dark:bg-gray-700">
               <div className="p-3">
                   <p className="text-xs">{text}</p>
               </div>
