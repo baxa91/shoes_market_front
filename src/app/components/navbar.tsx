@@ -23,14 +23,6 @@ export function MenuClick() {
                       title: "Избранные",
                       href: "/favorites",
                   },
-                  {
-                      title: "Мои заявки",
-                      href: "/orders",
-                  },
-                  {
-                      title: "Профиль",
-                      href: "/profile",
-                  },
               ]
             : [
                   {
@@ -46,8 +38,12 @@ export function MenuClick() {
         ...(user?.is_staff
             ? [
                   {
-                      title: "Админка",
-                      href: "/admin",
+                      title: "Создать товар",
+                      href: "/create_product",
+                  },
+                {
+                      title: "Тэги",
+                      href: "/tags",
                   },
               ]
             : []),
