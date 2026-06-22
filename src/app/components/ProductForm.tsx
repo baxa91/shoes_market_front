@@ -25,6 +25,7 @@ type Product = {
     price: number;
     currency: string;
     description: string;
+    article: string;
     tags: Tag[];
     images?: ProductImage[];
 };
@@ -91,6 +92,7 @@ export default function ProductForm({ mode, productId }: ProductFormProps) {
                 const product = await http.get<Product>(`/products/${productId}/`);
 
                 setTitle(product.title);
+                setArticle(product.article);
                 setPrice(String(product.price));
                 setCurrency(product.currency);
                 setDescription(product.description);

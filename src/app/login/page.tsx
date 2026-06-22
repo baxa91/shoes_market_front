@@ -15,7 +15,6 @@ export default function LoginPage() {
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         setError("");
-
         try {
             await login(email, password);
             router.push("/");
@@ -64,6 +63,7 @@ export default function LoginPage() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         type="password"
+                        minLength={8}
                         placeholder="Введите пароль"
                         className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-gray-800 focus:ring-2 focus:ring-gray-200"
                     />
