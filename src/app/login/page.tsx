@@ -67,6 +67,15 @@ export default function LoginPage() {
                         placeholder="Введите пароль"
                         className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm outline-none focus:border-gray-800 focus:ring-2 focus:ring-gray-200"
                     />
+                    <div className="mt-2 flex justify-end">
+                        <button
+                            type="button"
+                            onClick={() => router.push("/forgot-password")}
+                            className="text-sm text-gray-600 hover:text-gray-900 hover:underline"
+                        >
+                            Забыли пароль?
+                        </button>
+                    </div>
                 </div>
 
                 <button

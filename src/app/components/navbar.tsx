@@ -16,12 +16,24 @@ export function MenuClick() {
             title: "Каталог",
             href: "/",
         },
+        {
+            title: "О нас",
+            href: "/about-us",
+        },
+        {
+            title: "Контакты",
+            href: "/contact",
+        },
 
         ...(user
             ? [
                   {
                       title: "Избранные",
                       href: "/favorites",
+                  },
+                    {
+                      title: "Профиль",
+                      href: "/profile",
                   },
               ]
             : [
@@ -98,9 +110,12 @@ export function MenuClick() {
 
                     <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                         <div className="flex flex-shrink-0 items-center">
-                            <p className="h-10 w-auto text-white mt-1.5">
+                            <Link
+                                href="/"
+                                className="h-10 w-auto text-white mt-1.5 text-xl font-bold"
+                            >
                                 FAMILY
-                            </p>
+                            </Link>
                         </div>
 
                         <div className="hidden sm:ml-6 sm:block">

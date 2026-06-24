@@ -32,14 +32,14 @@ export default async function RootLayout({
       <footer className="shadow bg-gray-800">
       <div className="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
       <span className="text-sm  sm:text-center text-gray-400">
-        © 2024 <Link href="https://flowbite.com/" className="hover:underline">Family™</Link>. All Rights Reserved.
+        © 2024 <Link href="/" className="hover:underline">Family™</Link>. All Rights Reserved.
       </span>
         <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-gray-400 sm:mt-0">
           <li>
-            <Link href="#" className="hover:underline me-4 md:me-6">О нас</Link>
+            <Link href="/about-us" className="hover:underline me-4 md:me-6">О нас</Link>
           </li>
           <li>
-            <Link href="#" className="hover:underline">Контакты</Link>
+            <Link href="/contact" className="hover:underline">Контакты</Link>
           </li>
         </ul>
       </div>

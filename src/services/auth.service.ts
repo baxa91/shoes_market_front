@@ -20,6 +20,19 @@ export type RegisterPayload = {
     first_name: string;
     last_name: string;
 };
+export type UpdateUserPayload = {
+    nickname: string | null;
+    first_name: string | null;
+    last_name: string | null;
+    phone_number: string;
+    birth_date: string | null;
+    gender: string | null;
+};
+
+export function updateMeRequest(data: UpdateUserPayload) {
+    return http.patch<User>("/users/me/", data);
+}
+
 
 export type RegisterSessionResponse = {
     session_id: string;

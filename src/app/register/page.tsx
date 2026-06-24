@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createRegisterSession, confirmRegister } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
 
@@ -13,6 +13,7 @@ export default function RegisterPage() {
     const [code, setCode] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [secondsLeft, setSecondsLeft] = useState(300);
 
     const [form, setForm] = useState({
         nickname: "",
@@ -22,6 +23,29 @@ export default function RegisterPage() {
         first_name: "",
         last_name: "",
     });
+
+    useEffect(() => {
+        if (step !== "code") return;
+
+        setSecondsLeft(300);
+
+        const interval = setInterval(() => {
+            setSecondsLeft((prev) => {
+                if (prev <= 1) {
+                    clearInterval(interval);
+                    return 0;
+                }
+
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [step, sessionId]);
+
+    const minutes = Math.floor(secondsLeft / 60);
+    const seconds = secondsLeft % 60;
+    const timerText = `${minutes}:${String(seconds).padStart(2, "0")}`;
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         setForm({
@@ -189,6 +213,19 @@ export default function RegisterPage() {
                     </form>
                 ) : (
                     <form onSubmit={handleConfirm} className="space-y-4">
+                        <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-700">
+                            <p className="font-medium">
+                                Код подтверждения отправлен на вашу почту.
+                            </p>
+                            <p className="mt-1">
+                                Проверьте папку “Входящие”. Если письма нет, посмотрите папки
+                                “Спам” или “Промоакции”.
+                            </p>
+                            <p className="mt-2">
+                                Код действителен:{" "}
+                                <span className="font-semibold">{timerText}</span>
+                            </p>
+                        </div>
                         <div>
                             <label className="mb-1 block text-sm font-medium text-gray-700">
                                 Код подтверждения
@@ -199,14 +236,23 @@ export default function RegisterPage() {
                                 placeholder="444444"
                                 className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-center text-lg tracking-widest outline-none focus:border-gray-800 focus:ring-2 focus:ring-gray-200"
                             />
+                            {secondsLeft === 0 && (
+                                <p className="text-sm text-red-600">
+                                    Срок действия кода истёк. Вернитесь назад и отправьте код заново.
+                                </p>
+                            )}
                         </div>
 
                         <button
                             type="submit"
-                            disabled={loading}
+                            disabled={loading || secondsLeft === 0}
                             className="w-full rounded-lg bg-gray-800 px-4 py-2.5 text-sm font-medium text-white hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                            {loading ? "Проверяем..." : "Подтвердить"}
+                            {secondsLeft === 0
+                                ? "Код истёк"
+                                : loading
+                                  ? "Проверяем..."
+                                  : "Подтвердить"}
                         </button>
 
                         <button

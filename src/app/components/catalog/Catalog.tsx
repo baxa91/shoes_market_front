@@ -8,14 +8,14 @@ import CatalogFilters from "./CatalogFilters";
 import Pagination from "./Pagination";
 import LoginRequiredModal from "./LoginRequiredModal";
 import { useAuth } from "@/context/AuthContext";
+import {
+  loadCatalogFilters,
+  saveCatalogFilters,
+} from "@/lib/catalog-storage";
+import { SelectedTag } from "@/types/catalog";
 
 type Props = {
   favorites?: boolean;
-};
-
-type SelectedTag = {
-  id: string;
-  type: string;
 };
 
 
@@ -37,6 +37,33 @@ export default function Catalog({ favorites = false }: Props) {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const { user } = useAuth();
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [initialized, setInitialized] = useState(false);
+
+  useEffect(() => {
+    const saved = loadCatalogFilters();
+
+    if (saved) {
+      setPage(saved.page ?? 1);
+      setSelectedTags(saved.selectedTags ?? []);
+      setPriceAfter(saved.priceAfter ?? "");
+      setPriceBefore(saved.priceBefore ?? "");
+      setCreasing(saved.creasing ?? "");
+    }
+
+    setInitialized(true);
+  }, []);
+
+  useEffect(() => {
+    if (!initialized) return;
+
+    saveCatalogFilters({
+      page,
+      selectedTags,
+      priceAfter,
+      priceBefore,
+      creasing,
+    });
+  }, [initialized, page, selectedTags, priceAfter, priceBefore, creasing]);
 
   const isAuth = () => {
     if (typeof window === "undefined") return false;
@@ -98,8 +125,10 @@ export default function Catalog({ favorites = false }: Props) {
   }, []);
 
   useEffect(() => {
-    loadProducts();
-  }, [queryString]);
+    if (!initialized) return;
+
+    void loadProducts();
+  }, [queryString, initialized]);
 
   const resetPage = () => {
     setPage(1);
@@ -153,7 +182,21 @@ export default function Catalog({ favorites = false }: Props) {
       <h1 className="mt-8 text-2xl font-bold text-gray-900">
         {favorites ? "Избранные товары" : "Каталог товаров"}
       </h1>
+      <div className="mt-6 w-full max-w-6xl rounded-2xl bg-green-50 border border-green-200 p-4">
+        <div className="flex items-center justify-center gap-2 text-center">
+          <span className="text-2xl">🚚</span>
 
+          <div>
+            <h2 className="font-semibold text-green-800">
+              Доставка по Бурундаю бесплатно
+            </h2>
+
+            <p className="text-sm text-green-700">
+              Быстрая доставка и примерка перед покупкой
+            </p>
+          </div>
+        </div>
+      </div>
       <CatalogFilters
         tags={tags}
         selectedTags={selectedTags}

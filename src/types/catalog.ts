@@ -44,3 +44,8 @@ export type DetailProduct = {
   images: MiniProductImage[];
   created_at: string;
 };
+
+export type SelectedTag = {
+  id: string;
+  type: string;
+};

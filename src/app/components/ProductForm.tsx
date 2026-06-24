@@ -26,6 +26,7 @@ type Product = {
     currency: string;
     description: string;
     article: string;
+    main_image: string | null;
     tags: Tag[];
     images?: ProductImage[];
 };
@@ -59,6 +60,7 @@ export default function ProductForm({ mode, productId }: ProductFormProps) {
     const [description, setDescription] = useState("");
 
     const [mainImage, setMainImage] = useState<File | null>(null);
+    const [existingMainImage, setExistingMainImage] = useState<string | null>(null);
     const [extraImages, setExtraImages] = useState<File[]>([]);
 
     const [existingImages, setExistingImages] = useState<ProductImage[]>([]);
@@ -96,6 +98,7 @@ export default function ProductForm({ mode, productId }: ProductFormProps) {
                 setPrice(String(product.price));
                 setCurrency(product.currency);
                 setDescription(product.description);
+                setExistingMainImage(product.main_image);
                 setSelectedTags(product.tags.map((tag) => tag.id));
                 setExistingImages(product.images ?? []);
             } catch {
@@ -407,6 +410,31 @@ export default function ProductForm({ mode, productId }: ProductFormProps) {
                             }
                             className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm"
                         />
+                        {(mainImage || existingMainImage) && (
+                            <div className="mt-3 w-40 overflow-hidden rounded-xl border border-gray-200">
+                                <img
+                                    src={mainImage ? URL.createObjectURL(mainImage) : existingMainImage!}
+                                    alt="Главное фото"
+                                    className="h-40 w-full object-cover"
+                                />
+
+                                {mainImage && (
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setMainImage(null);
+
+                                            if (mainImageInputRef.current) {
+                                                mainImageInputRef.current.value = "";
+                                            }
+                                        }}
+                                        className="w-full bg-red-600 py-1 text-xs text-white"
+                                    >
+                                        Удалить новое фото
+                                    </button>
+                                )}
+                            </div>
+                        )}
                     </div>
 
                     {mode === "edit" && existingImages.length > 0 && (
@@ -415,27 +443,37 @@ export default function ProductForm({ mode, productId }: ProductFormProps) {
                                 Текущие дополнительные фото
                             </label>
 
-                            <div className="space-y-2">
-                                {existingImages.map((image) => (
-                                    <div
-                                        key={image.id}
-                                        className="flex items-center justify-between rounded-lg border border-gray-200 px-3 py-2"
-                                    >
-                                        <span className="text-sm text-gray-600">
-                                            Фото {image.id}
-                                        </span>
+                            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                                {existingImages.map((image) => {
+                                    const imageUrl = image.image || image.url;
 
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                removeExistingImage(image.id)
-                                            }
-                                            className="rounded-lg bg-red-50 px-3 py-1 text-sm text-red-600 hover:bg-red-100"
+                                    return (
+                                        <div
+                                            key={image.id}
+                                            className="relative overflow-hidden rounded-xl border border-gray-200"
                                         >
-                                            Удалить
-                                        </button>
-                                    </div>
-                                ))}
+                                            {imageUrl ? (
+                                                <img
+                                                    src={imageUrl}
+                                                    alt="Фото товара"
+                                                    className="h-32 w-full object-cover"
+                                                />
+                                            ) : (
+                                                <div className="flex h-32 items-center justify-center text-xs text-gray-400">
+                                                    Нет фото
+                                                </div>
+                                            )}
+
+                                            <button
+                                                type="button"
+                                                onClick={() => removeExistingImage(image.id)}
+                                                className="absolute right-2 top-2 rounded-full bg-red-600 px-2 py-1 text-xs text-white"
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
                     )}
@@ -460,9 +498,32 @@ export default function ProductForm({ mode, productId }: ProductFormProps) {
                         />
 
                         {extraImages.length > 0 && (
-                            <p className="mt-2 text-sm text-gray-500">
-                                Выбрано фото: {extraImages.length}
-                            </p>
+                            <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                                {extraImages.map((file, index) => (
+                                    <div
+                                        key={`${file.name}-${index}`}
+                                        className="relative overflow-hidden rounded-xl border border-gray-200"
+                                    >
+                                        <img
+                                            src={URL.createObjectURL(file)}
+                                            alt={`Фото ${index + 1}`}
+                                            className="h-32 w-full object-cover"
+                                        />
+
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                setExtraImages((prev) =>
+                                                    prev.filter((_, i) => i !== index)
+                                                )
+                                            }
+                                            className="absolute right-2 top-2 rounded-full bg-red-600 px-2 py-1 text-xs text-white"
+                                        >
+                                            ✕
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
                         )}
                     </div>
 
