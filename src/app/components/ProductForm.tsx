@@ -182,8 +182,9 @@ export default function ProductForm({ mode, productId }: ProductFormProps) {
                     tags: selectedTags,
                     currency,
                     description: description.trim(),
-                    ...(mainImageBase64 && {
+                     ...(mainImageBase64 && {
                         main_image: mainImageBase64,
+                        old_main_image: existingMainImage,
                     }),
                 });
             }
